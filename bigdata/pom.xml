@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>apollo</groupId>
+	<artifactId>bigdata</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<name>bigdata</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.compiler.level>1.6</project.build.compiler.level>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.external</groupId>
+			<artifactId>jdbc.oracle</artifactId>
+			<version>10.2.0.2</version>
+		</dependency>
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Alibaba Repositories Group</name>
+			<url>http://repo.alibaba-inc.com/nexus/content/groups/alirepositiry/</url>
+		</repository>
+
+	<repository>
+		<id>repo1</id>
+		<name>Maven Repository Default</name>
+		<layout>default</layout>
+		<url>http://repo1.maven.org/maven2</url>
+	</repository>
+
+	<repository>
+		<id>repo2</id>
+		<name>Maven Repository Default</name>
+		<layout>default</layout>
+		<url>http://repo2.maven.org/maven2</url>
+	</repository>
+	</repositories>
+</project>
