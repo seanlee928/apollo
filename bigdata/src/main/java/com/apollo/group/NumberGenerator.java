@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 
+import com.apollo.FileHelp;
+
 public class NumberGenerator {
 	/**
 	 * @param args
