@@ -1,6 +1,7 @@
 package com.apollo.dbfetcher;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -25,25 +26,26 @@ import com.apollo.FileHelp;
  * @author dragon.caol 2012-8-21 下午5:24:53
  */
 public class DbFetcher {
-	static BlockingQueue<String> queue = new ArrayBlockingQueue<String>(2500);
-	static BlockingQueue<String> outStringQueue = new ArrayBlockingQueue<String>(
+	private static BlockingQueue<String> queue = new ArrayBlockingQueue<String>(
+			2500);
+	private static BlockingQueue<String> outStringQueue = new ArrayBlockingQueue<String>(
 			10000);
-	static String sql = "select ali_id from CBU_MEMBER_ID_MAPPING_new where member_id=? and rownum=1";
-	static String filePre = "D:\\资料\\项目文档\\换mid\\数据提取\\王义东 需要匹配ID\\";
-	static String file = "续签统计2013年（2012-8-10）_master5";
-	static AtomicInteger count = new AtomicInteger(0);
+	private static String sql = "select ali_id from CBU_MEMBER_ID_MAPPING_new where member_id=? and rownum=1";
+	private static String filePre = "D:\\temp\\last\\";
+	private static String file = null;
+	private static AtomicInteger count = new AtomicInteger(0);
 
-	static class Producer implements Runnable {
+	private static class Producer implements Runnable {
 		public void run() {
 			BufferedReader br = null;
 			try {
-				br = FileHelp.getBufferedReader(filePre + file + ".txt");
+				br = FileHelp.getBufferedReader(filePre + file);
 				String line = null;
 				while ((line = br.readLine()) != null) {
 					if (line == null || line.trim().equals("")) {
 
 					} else {
-						queue.put(line);
+						queue.put(line.trim());
 					}
 				}
 			} catch (IOException e) {
@@ -56,7 +58,7 @@ public class DbFetcher {
 		}
 	}
 
-	static class Consumer implements Runnable {
+	private static class Consumer implements Runnable {
 		public void run() {
 			Connection con = DBConnection.getConnection();
 			PreparedStatement pstmt = null;
@@ -97,11 +99,11 @@ public class DbFetcher {
 		}
 	}
 
-	static class FileBacker implements Runnable {
+	private static class FileBacker implements Runnable {
 		public void run() {
 			PrintWriter out = null;
 			try {
-				out = FileHelp.getPrintWriter(filePre + file + ".r.txt");
+				out = FileHelp.getPrintWriter(filePre + file + ".xls");
 				while (true) {
 
 					String str = outStringQueue.poll(5, TimeUnit.SECONDS);
@@ -126,6 +128,15 @@ public class DbFetcher {
 
 	public static void main(String[] args) throws SQLException, IOException,
 			InterruptedException {
+		File f = new File(filePre);
+		for (String filetemp : f.list()) {
+			DbFetcher.file = filetemp;
+			doit();
+		}
+
+	}
+
+	private static void doit() throws InterruptedException {
 		long start = System.currentTimeMillis();
 		ExecutorService executor = Executors.newCachedThreadPool();
 		List<Future<?>> li = new ArrayList<Future<?>>();
@@ -158,6 +169,6 @@ public class DbFetcher {
 			number = new_number;
 		}
 		long end = System.currentTimeMillis();
-		System.out.println((end - start) / 1000);
+		System.out.println("total time:" + (end - start) / 1000 + "s.");
 	}
 }
