@@ -1,0 +1,1 @@
+ sh hadoop jar  hadoop.learn-1.0.jar com.apollo.mr.WordCount /hello /wordcount/output/00010
