@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<property>
+  <name>mapreduce.framework.name</name>
+  <value>yarn</value>
+</property>
+<property>
+  <name>yarn.app.mapreduce.am.command-opts</name>
+  <value>-Xmx1000m -Xdebug -Xrunjdwp:transport=dt_socket,address=5555,server=y,suspend=n</value>
+</property>
+</configuration>
