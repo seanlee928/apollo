@@ -1,5 +1,6 @@
 package com.apollo.mr;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
@@ -25,10 +26,14 @@ public class WordCount {
 		private final static IntWritable one = new IntWritable(1);
 		private Text word = new Text();
 
+		protected void setup(Context context) throws IOException,
+				InterruptedException {
+			System.out.println("file.txt is " + new File("file.txt").exists());
+		}
+
 		public void map(Object key, Text value, Context context)
 				throws IOException, InterruptedException {
 			StringTokenizer itr = new StringTokenizer(value.toString());
-			Thread.sleep(10000);
 			System.out.println(key + ":" + value);
 			while (itr.hasMoreTokens()) {
 				word.set(itr.nextToken());
@@ -45,7 +50,6 @@ public class WordCount {
 		public void reduce(Text key, Iterable<IntWritable> values,
 				Context context) throws IOException, InterruptedException {
 			int sum = 0;
-			Thread.sleep(10000);
 			System.out.println(key);
 			for (IntWritable val : values) {
 				sum += val.get();
@@ -70,10 +74,12 @@ public class WordCount {
 
 		job.setMapperClass(TokenizerMapper.class);
 		job.setCombinerClass(IntSumReducer.class);
-//		job.setReducerClass(IntSumReducer.class);
+		// job.setInputFormatClass(SequenceFileInputFormat.class);
+		job.setReducerClass(IntSumReducer.class);
 
 		job.setOutputKeyClass(Text.class);// add by dragon.caol
 		job.setOutputValueClass(IntWritable.class);// getMapOutputKeyClass
+		
 
 		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
 		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
