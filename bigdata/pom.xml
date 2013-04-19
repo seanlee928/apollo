@@ -15,7 +15,6 @@
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -35,18 +34,18 @@
 			<url>http://repo.alibaba-inc.com/nexus/content/groups/alirepositiry/</url>
 		</repository>
 
-	<repository>
-		<id>repo1</id>
-		<name>Maven Repository Default</name>
-		<layout>default</layout>
-		<url>http://repo1.maven.org/maven2</url>
-	</repository>
+		<repository>
+			<id>repo1</id>
+			<name>Maven Repository Default</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
 
-	<repository>
-		<id>repo2</id>
-		<name>Maven Repository Default</name>
-		<layout>default</layout>
-		<url>http://repo2.maven.org/maven2</url>
-	</repository>
+		<repository>
+			<id>repo2</id>
+			<name>Maven Repository Default</name>
+			<layout>default</layout>
+			<url>http://repo2.maven.org/maven2</url>
+		</repository>
 	</repositories>
 </project>
