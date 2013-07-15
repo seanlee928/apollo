@@ -1,0 +1,33 @@
+分布式系统比普通程序开发有一些特别的难度，最主要的就是环境问题。本博客将记录怎么去解决这些问题，最主要的是一些脚本。后期会连续更新，目前最主要的技巧有：
+
+ssh打通：hadoop在部署的时候，各个机器之间肯定要打通，我们不可能手工去敲每一个命令。所以最好有一个脚本。https://github.com/lwwcl1314/apollo/blob/master/distrubutescript/bin/pubkey.sh 此为我一个同事写的脚本。
+远程执行：我们往往在修改了一些配置、命令后，需要同步到各个自己上面，此时就需要远程执行。一般就是 ssh h2 “command”,如果同步多个文件最好是这么书写，如：https://github.com/lwwcl1314/apollo/blob/master/distrubutescript/bin/syncresource.sh 如果弄成多线程的，可以https://github.com/lwwcl1314/apollo/blob/master/distrubutescript/bin/remotecommand.sh 此为我网上找的。
+debug,我们一般需要在一些守护进程上面加上调试端口,如：
+elif [ "$COMMAND" = "resourcemanager" ] ; then
+  CLASSPATH=${CLASSPATH}:$YARN_CONF_DIR/rm-config/log4j.properties
+  CLASS='org.apache.hadoop.yarn.server.resourcemanager.ResourceManager'
+  YARN_OPTS="$YARN_OPTS $YARN_RESOURCEMANAGER_OPTS"
+  YARN_OPTS="$YARN_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=1314,server=y,suspend=n"
+AM需要在配置文件mapred-site.xml配置：
+
+<property>
+  <name>yarn.app.mapreduce.am.command-opts</name>
+  <value>-Xmx1000m -Xdebug -Xrunjdwp:transport=dt_socket,address=5555,server=y,suspend=n</value>
+</property>
+以前的版本对于child是配置：
+
+ <property>
+ 924   <name>mapred.child.java.opts</name>
+ 925   <value>-Xmx2000mM<!-- Xdebug -Xrunjdwp:transport=dt_socket,address=6666,server=y,suspend=y--></value>
+ 926   <description>Java opts for the task tracker child processes.
+ 927   The following symbol, if present, will be interpolated: @taskid@ is replaced
+ 928   by current TaskID. Any other occurrences of '@' will go unchanged.
+ 929   For example, to enable verbose gc logging to a file named for the taskid in
+ 930   /tmp and to set the heap maximum to be a gigabyte, pass a 'value' of:
+ 931         -Xmx1024m -verbose:gc -Xloggc:/tmp/@taskid@.gc
+ 932
+ 933   The configuration variable mapred.child.ulimit can be used to control the
+ 934   maximum virtual memory of the child processes.
+ 935   </description>
+ 936 </property>
+yarn版本控制container的参数比较多：分admin、user，user可以覆盖admin的；把map、reduce分开。参数有：mapreduce.map.java.opts、mapreduce.admin.map.child.java.opts、mapreduce.reduce.java.opts、mapreduce.admin.reduce.child.java.opts。
